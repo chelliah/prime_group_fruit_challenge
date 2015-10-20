@@ -66,12 +66,22 @@ function buyFruit(context){
 		alert("Sorry! You are broke!");
 		return;
 	}
-	
+
 	fruits[name].fruitQty++;
 	fruits[name].totalSpent += fruits[name].fruitPrice;
 	totalCash -= fruits[name].fruitPrice;
 	console.log(totalCash.toFixed(2));
 	appendDom();
+}
+
+function getAvgPrice(object){
+	var avgPrice;
+	if(object.fruitQty==0){
+		avgPrice = 0;
+	}else{
+		avgPrice = (object.totalSpent/object.fruitQty).toFixed(2);
+	}
+	return avgPrice;
 }
 
 function appendDom(){
@@ -80,9 +90,9 @@ function appendDom(){
 		$("#container").append("<div class='fruit' data-name='" + object + "'></div>");
 		var $el = $("#container").children().last();
 		$el.append("<p>" + fruits[object].fruitName + ": </p>");
-		$el.append("<p>" + fruits[object].fruitPrice + "</p>");
+		$el.append("<p>$" + fruits[object].fruitPrice + "</p>");
 		$el.append("<button class='buy' id='"+object+"Button'>Buy</button>");
-		$el.append("<p> Average Price Per Fruit" + (fruits[object].totalSpent/fruits[object].fruitQty).toFixed(2) + "</p>")
+		$el.append("<p> Average Price Per Fruit: $" + getAvgPrice(fruits[object]) + "</p>")
 	}
 	$("#container").append("<div class='cash'></div>");
 	$el = $("#container").children().last();

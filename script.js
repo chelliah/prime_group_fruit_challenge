@@ -2,7 +2,7 @@ var totalCash = 100.00;
 
 var fruits = {
 	apple: new generateFruit("apple", initializePrice()),
-	banana: new generateFruit("banana", initializePrice()),
+	bananas: new generateFruit("bananas", initializePrice()),
 	// grape: new generateFruit("grape", initializePrice()),
 	orange: new generateFruit("orange", initializePrice()),
 	pear: new generateFruit("pear", initializePrice())
@@ -87,11 +87,14 @@ function getAvgPrice(object){
 function appendDom(){
 	$("#container").empty();
 	for(object in fruits){
-		$("#container").append("<div class='fruit' data-name='" + object + "'></div>");
+		$("#container").append("<div class='col-md-3 well fruit' data-name='" + object + "'></div>");
 		var $el = $("#container").children().last();
+
+		var link = "<img src='images/"+ object +".png' height=32 width=32>"
+
 		$el.append("<p>" + fruits[object].fruitName + ": </p>");
 		$el.append("<p>$" + fruits[object].fruitPrice + "</p>");
-		$el.append("<button class='buy' id='"+object+"Button'>Buy</button>");
+		$el.append("<div class='btn btn-success buy' id='"+object+"Button'>"+ link + " Buy</div>");
 		$el.append("<p> Average Price Per Fruit: $" + getAvgPrice(fruits[object]) + "</p>")
 	}
 	$("#container").append("<div class='cash'></div>");
@@ -105,7 +108,7 @@ $(document).ready(function(){
 	setInterval(function(){
 		appendFruits();
 		appendDom();
-	},5000);
+	},15000);
 
 	$("#container").on('click', '.buy', function(){
 		// console.log(this);

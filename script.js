@@ -97,7 +97,7 @@ function appendDom(){
 		$el.append("<div class='btn btn-success buy' id='"+object+"Button'>"+ link + " Buy</div>");
 		$el.append("<p> Average Price Per Fruit: $" + getAvgPrice(fruits[object]) + "</p>")
 	}
-	$("#container").append("<div class='cash'></div>");
+	$("#container").append("<div class='lead cash'></div>");
 	$el = $("#container").children().last();
 	$el.append("<p>Total Cash Money Available: $ " + totalCash.toFixed(2) + "</p>");
 

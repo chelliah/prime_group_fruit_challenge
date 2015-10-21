@@ -124,17 +124,17 @@ function formatPrice(number){
 function appendDom(){
 	$("#container").empty();
 	for(object in fruits){
-		$("#container").append("<div class='col-md-3 well fruit' data-name='" + object + "'></div>");
+		$("#container").append("<div class='col-md-3 col-sm-6 col-xs-6 well fruit' data-name='" + object + "'></div>");
 		var $el = $("#container").children().last();
 
 		var link = "<img src='images/"+ object +".png' height=32 width=32>"
 
 
-		$el.append("<p>" + fruits[object].fruitName + ": </p>");
-		$el.append("<p>$" + formatPrice(fruits[object].fruitPrice) + "</p>");
+		$el.append("<p class='fruit-name'>" + fruits[object].fruitName + ": <span class='badge'><big>" + fruits[object].fruitQty + "</big></span></p>");
+		$el.append("<p class='price'>$" + formatPrice(fruits[object].fruitPrice) + "</p>");
 		$el.append("<div class='btn btn-success buy' id='"+object+"Button'>"+ link + " Buy</div>");
 		$el.append("<div class='btn btn-info sell' id='"+object+"SellButton'>"+ link + " Sell</div>");
-		$el.append("<p> Average Price Per Fruit: $" + formatPrice(getAvgPrice(fruits[object])) + "</p>")
+		$el.append("<p class='price'> Average Price Per Fruit: $" + formatPrice(getAvgPrice(fruits[object])) + "</p>")
 	}
 	$("#container").append("<div class='lead cash'></div>");
 	$el = $("#container").children().last();
@@ -144,33 +144,36 @@ function appendDom(){
 function finalizeDom(){
 	$("#container").empty();
 	for(object in fruits){
-		$("#container").append("<div class='col-md-3 well fruit' data-name='" + object + "'></div>");
+		$("#container").append("<div class='col-md-3 col-sm-6 col-xs-6 well fruit' data-name='" + object + "'></div>");
 		var $el = $("#container").children().last();
 
 		var link = "<img src='images/"+ object +".png' height=32 width=32>"
 
 
-		$el.append("<p>" + fruits[object].fruitName + ": </p>");
-		$el.append("<p>$" + formatPrice(fruits[object].fruitPrice) + "</p>");
+		$el.append("<p class='fruit-name'>" + fruits[object].fruitName + ": <span class='badge'><big>" + fruits[object].fruitQty + "</big></span></p>");
+		$el.append("<p class = 'price'>$" + formatPrice(fruits[object].fruitPrice) + "</p>");
 		$el.append("<div class='btn btn-success buy' id='"+object+"Button'>"+ link + " Buy</div>");
 		$el.append("<div class='btn btn-info sell' id='"+object+"SellButton'>"+ link + " Sell</div>");
-		$el.append("<p> Average Price Per Fruit: $" + formatPrice(getAvgPrice(fruits[object])) + "</p>")
+		$el.append("<p class = 'price'> Average Price Per Fruit: $" + formatPrice(getAvgPrice(fruits[object])) + "</p>")
 	}
 	$("#container").append("<div class='lead cash'></div>");
 	$el = $("#container").children().last();
-	if(totalCash<100){
-		$el.append("<p class='text-danger'>Total Cash Money Available: $ " + formatPrice(totalCash.toFixed(2)) + "</p>");
+	var finalCash = formatPrice(totalCash.toFixed(2));
+	if(finalCash<100){
+		$el.append("<p>Total Cash Money Available: <span class='text-danger strong'>$" + finalCash + "</span></p>");
 		var lost = (100-totalCash).toFixed(2);
-		$el.append("<p class='text-danger'>You lost a total of $ " + formatPrice(lost) + "</p>");
+		$el.append("<p>You Lost A Total Of: <span class='text-danger strong'>$" + formatPrice(lost) + "</span></p>");
 
-	}else if (totalCash==100){
-		$el.append("<p class='text-success'>Total Cash Money Available: $ " + formatPrice(totalCash.toFixed(2)) + "</p>");
-		$el.append("<p class='text-success'>You Broke Even</p>");
+	}else if (finalCash ==100){
+		$el.append("<p>Total Cash Money Available: $" + finalCash + "</span></p>");
+		$el.append("<p>You Broke Even</p>");
 	}else{
-		$el.append("<p class='text-success'>Total Cash Money Available: $ " + formatPrice(totalCash.toFixed(2)) + "</p>");
+		$el.append("<p>Total Cash Money Available: <span class='text-success strong'>$" + finalCash + "</span></p>");
 		var earned = (totalCash-100).toFixed(2);
-		$el.append("<p class='text-success'>You Earned A Total of $ " + formatPrice(earned) + "</p>");
+		$el.append("<p>You Earned A Total Of: <span class='text-success strong'>$" + formatPrice(earned) + "</span></p>");
 	}
+
+	$("#container").off();
 }
 
 $(document).ready(function(){
@@ -195,7 +198,7 @@ $(document).ready(function(){
 		finalizeDom();
 		clearInterval(setTimer);
 		clearInterval(setChange);
-		$("#container").off();
+		
 	}, 5000);
 
 });

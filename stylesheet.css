@@ -11,5 +11,13 @@ p {
 .btn {
 	position: relative;
 	display: block;
-	margin: 0 auto;
+	margin: 5px auto;
+}
+
+.fruit-name {
+	font-size: 20px;
+}
+
+.price {
+	font-size: 16px;
 }

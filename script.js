@@ -58,6 +58,23 @@ function appendFruits () {
 	}
 }
 
+function sellFruit(context){
+	var $el = $(context).parent();
+	var name = $el.data('name');
+
+	if(fruits[name].fruitQty < 1) {
+		alert("Sorry!  You have no " + name + " to sell!");
+		return;
+	}
+	fruits[name].fruitQty--;
+	fruits[name].totalSpent -= fruits[name].fruitPrice;
+	totalCash += fruits[name].fruitPrice;
+	console.log(totalCash.toFixed(2));
+	appendDom();
+}
+
+
+
 function buyFruit(context){
 	var $el = $(context).parent();
 	var name = $el.data('name');
@@ -95,6 +112,7 @@ function appendDom(){
 		$el.append("<p>" + fruits[object].fruitName + ": </p>");
 		$el.append("<p>$" + fruits[object].fruitPrice + "</p>");
 		$el.append("<div class='btn btn-success buy' id='"+object+"Button'>"+ link + " Buy</div>");
+		$el.append("<div class='btn btn-info sell' id='"+object+"SellButton'>"+ link + " Sell</div>");
 		$el.append("<p> Average Price Per Fruit: $" + getAvgPrice(fruits[object]) + "</p>")
 	}
 	$("#container").append("<div class='lead cash'></div>");
@@ -114,5 +132,20 @@ $(document).ready(function(){
 		// console.log(this);
 		buyFruit(this);
 	});
+	$("#container").on('click', '.sell', function(){
+		// console.log(this);
+		sellFruit(this);
+	});
 
 });
+
+
+
+
+
+
+
+
+
+
+

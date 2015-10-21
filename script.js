@@ -182,7 +182,7 @@ $(document).ready(function(){
 	var setChange = setInterval(function(){
 		appendFruits();
 		appendDom();
-	},1000);
+	},15000);
 
 	$("#container").on('click', '.buy', function(){
 		buyFruit(this);
@@ -199,7 +199,7 @@ $(document).ready(function(){
 		clearInterval(setTimer);
 		clearInterval(setChange);
 		
-	}, 5000);
+	}, 300000);
 
 });
 

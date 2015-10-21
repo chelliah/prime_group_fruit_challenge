@@ -1,11 +1,11 @@
 var totalCash = 100.00;
 
 var fruits = {
-	apple: new generateFruit("apple", initializePrice()),
-	bananas: new generateFruit("bananas", initializePrice()),
+	apple: new generateFruit("Apple", initializePrice()),
+	bananas: new generateFruit("Bananas", initializePrice()),
 	// grape: new generateFruit("grape", initializePrice()),
-	orange: new generateFruit("orange", initializePrice()),
-	pear: new generateFruit("pear", initializePrice())
+	orange: new generateFruit("Orange", initializePrice()),
+	pear: new generateFruit("Pear", initializePrice())
 };
 
 function generateFruit(name, price){
@@ -69,10 +69,20 @@ function sellFruit(context){
 	fruits[name].fruitQty--;
 	fruits[name].totalSpent -= fruits[name].fruitPrice;
 	totalCash += fruits[name].fruitPrice;
-	console.log(totalCash.toFixed(2));
+	// console.log(totalCash.toFixed(2));
 	appendDom();
 }
 
+function sellAll(){
+	for(objects in fruits){
+		console.log("this is the fruit", objects);
+		totalCash+= fruits[objects].fruitQty*fruits[objects].fruitPrice;
+		console.log("Qty before zero", fruits[objects].fruitQty);
+		fruits[objects].fruitQty=0;
+		console.log("This is quantity ", fruits[objects].fruitQty);
+		console.log("This is cash ", totalCash);
+	}	
+}
 
 
 function buyFruit(context){
@@ -87,7 +97,7 @@ function buyFruit(context){
 	fruits[name].fruitQty++;
 	fruits[name].totalSpent += fruits[name].fruitPrice;
 	totalCash -= fruits[name].fruitPrice;
-	console.log(totalCash.toFixed(2));
+	// console.log(totalCash.toFixed(2));
 	appendDom();
 }
 
@@ -101,6 +111,16 @@ function getAvgPrice(object){
 	return avgPrice;
 }
 
+function formatPrice(number){
+	number = number.toString();
+	if(number.length==1){
+		number = number + ".00"
+	}else if(number.length==3){
+		number = number + "0"
+	}
+	return number;
+}
+
 function appendDom(){
 	$("#container").empty();
 	for(object in fruits){
@@ -109,36 +129,76 @@ function appendDom(){
 
 		var link = "<img src='images/"+ object +".png' height=32 width=32>"
 
+
 		$el.append("<p>" + fruits[object].fruitName + ": </p>");
-		$el.append("<p>$" + fruits[object].fruitPrice + "</p>");
+		$el.append("<p>$" + formatPrice(fruits[object].fruitPrice) + "</p>");
 		$el.append("<div class='btn btn-success buy' id='"+object+"Button'>"+ link + " Buy</div>");
 		$el.append("<div class='btn btn-info sell' id='"+object+"SellButton'>"+ link + " Sell</div>");
-		$el.append("<p> Average Price Per Fruit: $" + getAvgPrice(fruits[object]) + "</p>")
+		$el.append("<p> Average Price Per Fruit: $" + formatPrice(getAvgPrice(fruits[object])) + "</p>")
 	}
 	$("#container").append("<div class='lead cash'></div>");
 	$el = $("#container").children().last();
-	$el.append("<p>Total Cash Money Available: $ " + totalCash.toFixed(2) + "</p>");
+	$el.append("<p>Total Cash Money Available: $ " + formatPrice(totalCash.toFixed(2)) + "</p>");
+}
 
+function finalizeDom(){
+	$("#container").empty();
+	for(object in fruits){
+		$("#container").append("<div class='col-md-3 well fruit' data-name='" + object + "'></div>");
+		var $el = $("#container").children().last();
+
+		var link = "<img src='images/"+ object +".png' height=32 width=32>"
+
+
+		$el.append("<p>" + fruits[object].fruitName + ": </p>");
+		$el.append("<p>$" + formatPrice(fruits[object].fruitPrice) + "</p>");
+		$el.append("<div class='btn btn-success buy' id='"+object+"Button'>"+ link + " Buy</div>");
+		$el.append("<div class='btn btn-info sell' id='"+object+"SellButton'>"+ link + " Sell</div>");
+		$el.append("<p> Average Price Per Fruit: $" + formatPrice(getAvgPrice(fruits[object])) + "</p>")
+	}
+	$("#container").append("<div class='lead cash'></div>");
+	$el = $("#container").children().last();
+	if(totalCash<100){
+		$el.append("<p class='text-danger'>Total Cash Money Available: $ " + formatPrice(totalCash.toFixed(2)) + "</p>");
+		var lost = (100-totalCash).toFixed(2);
+		$el.append("<p class='text-danger'>You lost a total of $ " + formatPrice(lost) + "</p>");
+
+	}else if (totalCash==100){
+		$el.append("<p class='text-success'>Total Cash Money Available: $ " + formatPrice(totalCash.toFixed(2)) + "</p>");
+		$el.append("<p class='text-success'>You Broke Even</p>");
+	}else{
+		$el.append("<p class='text-success'>Total Cash Money Available: $ " + formatPrice(totalCash.toFixed(2)) + "</p>");
+		var earned = (totalCash-100).toFixed(2);
+		$el.append("<p class='text-success'>You Earned A Total of $ " + formatPrice(earned) + "</p>");
+	}
 }
 
 $(document).ready(function(){
 	appendDom();
-	setInterval(function(){
+
+	var setChange = setInterval(function(){
 		appendFruits();
 		appendDom();
-	},15000);
+	},1000);
 
 	$("#container").on('click', '.buy', function(){
-		// console.log(this);
 		buyFruit(this);
 	});
 	$("#container").on('click', '.sell', function(){
-		// console.log(this);
+
 		sellFruit(this);
 	});
 
-});
+	var setTimer = setInterval(function(){
+		alert("Buying stopped, all items sold!");
+		sellAll();
+		finalizeDom();
+		clearInterval(setTimer);
+		clearInterval(setChange);
+		$("#container").off();
+	}, 5000);
 
+});
 
 
 
